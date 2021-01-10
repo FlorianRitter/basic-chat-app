@@ -15,10 +15,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // Authentication (Login-Prompt)
+/*
 app.use(basicAuth({
   users: { 'admin': 'admin' },
   challenge: true,
 }));
+*/
 
 app.use(logger('dev'));
 app.use(express.json());
