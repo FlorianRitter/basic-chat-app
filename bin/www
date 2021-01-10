@@ -2,7 +2,7 @@ var app = require('../app');
 var debug = require('debug')('chat-app:server');
 var http = require('http');
 
-var port = normalizePort(process.argv.length === 3 && process.argv[2] === '-dev' ? 8080 : 80);
+var port = normalizePort(process.argv.length === 3 && process.argv[2] === '-dev' ? 8080 : 3000);
 app.set('port', port);
 
 var server = http.createServer(app);
