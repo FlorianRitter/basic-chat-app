@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chat-App</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        .chat.page {
+            display: none;
+        }
+
+        .username {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login page">
+        <h3 class="title">Username:</h3>
+        <input class="usernameInput" type="text" />
+    </div>
+
+    <div class="chat page">
+        <h3 class="title">Message:</h3>
+        <input class="inputMessage" />
+        <ul class="messages"></ul>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="javascripts/main.js"></script>
+</body>
+
+</html>

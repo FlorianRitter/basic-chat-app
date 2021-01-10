@@ -1,0 +1,84 @@
+var app = require('../app');
+var debug = require('debug')('chat-app:server');
+var http = require('http');
+
+var port = normalizePort(process.argv.length === 3 && process.argv[2] === '-dev' ? 8080 : 80);
+app.set('port', port);
+
+var server = http.createServer(app);
+var io = require('socket.io')(server);
+
+io.on('connection', function (socket) {
+	var addedUser = false;
+
+	socket.on('add user', function (username) {
+		socket.username = username;
+		addedUser = true;
+
+		socket.emit('login');
+
+		socket.broadcast.emit('user joined', socket.username);
+	});
+
+	socket.on('new message', function (data) {
+		socket.broadcast.emit('new message', {
+			username: socket.username,
+			message: data
+		});
+	});
+
+	socket.on('disconnect', function () {
+		if (addedUser) {
+			socket.broadcast.emit('user left', socket.username);
+		}
+	});
+});
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+function normalizePort(val) {
+	var port = parseInt(val, 10);
+
+	if (isNaN(port)) {
+		return val;
+	}
+
+	if (port >= 0) {
+		return port;
+	}
+
+	return false;
+}
+
+function onError(error) {
+	if (error.syscall !== 'listen') {
+		throw error;
+	}
+
+	var bind = typeof port === 'string'
+		? 'Pipe ' + port
+		: 'Port ' + port;
+
+	switch (error.code) {
+		case 'EACCES':
+			console.error(bind + ' requires elevated privileges');
+			process.exit(1);
+			break;
+		case 'EADDRINUSE':
+			console.error(bind + ' is already in use');
+			process.exit(1);
+			break;
+		default:
+			throw error;
+	}
+}
+
+function onListening() {
+	var addr = server.address();
+	var bind = typeof addr === 'string'
+		? 'pipe ' + addr
+		: 'port ' + addr.port;
+	debug('Listening on ' + bind);
+}
